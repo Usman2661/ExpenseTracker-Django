@@ -3,17 +3,35 @@
 {% block content %}
 
 <div class="card" style="width: 18rem;">
+    {% for message in messages %}
+    {% if "Error" in message %}
+    <div class="alert alert-danger">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+
+        {{ message }}
+
+    </div>
+
+    {% else %}
+    <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+
+        {{ message }}
+
+    </div>
+
+    {% endif %}
+    {% endfor %}
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
                 Add Expense
               </button>
               <div class="list-group">
+                {% for expense in MyExpense%}
                     <a href="#" class="list-group-item list-group-item-action ">
-                      Cras justo odio
+                     £{{expense.Amount}} at {{expense.Catagory}} on {{expense.Date_Time}}
                     </a>
-                    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-                    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-                    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-                    <a href="#" class="list-group-item list-group-item-action">Vestibulum at eros</a>
+                    {%endfor%}
+                  
                   </div>
 </div>
 
@@ -24,27 +42,27 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Expense</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                    <form method="POST" action="{% url 'home'%}">
+                    <form method="POST" action="{% url 'home' %}">
 
                         {% csrf_token %}
                             <div class="form-group">
-                              <label for="exampleFormControlInput1">Amount</label>
+                              <label for="amount">Amount</label>
                               <input type="number" class="form-control" id="amount" name="amount" placeholder="10">
                             </div>
                             <div class="form-group">
-                              <label for="exampleFormControlSelect1">Catagory</label>
+                              <label for="Catagory">Catagory</label>
                               <select class="form-control" id="catagory" name="catagory">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
+                                  <option  selected disabled="disabled"> Please Select Catagory</option>
+                                {% for catagory in MyCatagories %}
+                                <option value="{{catagory.Name}}">{{catagory.Name}}</option>
+                              
+                                {% endfor %}
                               </select>
                             </div>
                             <div class="form-group">
