@@ -25,10 +25,14 @@
         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
                 Add Expense
               </button>
+              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#catagorymodel">
+                  Add Catagory
+                </button>
+              
               <div class="list-group">
                 {% for expense in MyExpense%}
                     <a href="#" class="list-group-item list-group-item-action ">
-                     £{{expense.Amount}} at {{expense.Catagory}} on {{expense.Date_Time}}
+                     £{{expense.Amount}} spent on {{expense.Catagory}} on {{expense.Date_Time}}
                     </a>
                     {%endfor%}
                   
@@ -55,6 +59,7 @@
                               <label for="amount">Amount</label>
                               <input type="number" class="form-control" id="amount" name="amount" placeholder="10">
                             </div>
+                        
                             <div class="form-group">
                               <label for="Catagory">Catagory</label>
                               <select class="form-control" id="catagory" name="catagory">
@@ -74,6 +79,7 @@
                               <label for="exampleFormControlTextarea1">Notes</label>
                               <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
                             </div>
+                   
 
             </div>
             <div class="modal-footer">
@@ -86,4 +92,42 @@
         </div>
       </div>
 
+
+         <!-- Modal -->
+         <div class="modal fade" id="catagorymodel" tabindex="-1" role="dialog" aria-labelledby="catagorymodel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Expense</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                        <form method="POST" action="{% url 'home' %}">
+    
+                            {% csrf_token %}
+                                <div class="form-group">
+                                  <label for="amount">Catagory Name</label>
+                                  <input type="text" class="form-control" id="newcatagory" name="newcatagory" placeholder="Enter Catagory">
+                                </div>
+                            
+                            
+    
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Add Catagory</button>
+                </div>
+                
+            </form>
+              </div>
+            </div>
+          </div>
+
 {%endblock%}
+<script type="text/javascript">
+  $(function () {
+      $('#datetimepicker1').datetimepicker();
+  });
+</script>
