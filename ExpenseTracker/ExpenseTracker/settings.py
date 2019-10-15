@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'accounts.apps.AccountsConfig',
     'expense.apps.ExpenseConfig',
+    'Friends.apps.FriendsConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
