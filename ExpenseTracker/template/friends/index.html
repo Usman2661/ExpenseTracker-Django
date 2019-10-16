@@ -1,6 +1,25 @@
 {% extends 'base.html'%}
 {% block content%}
 <h1> Welcome to the friends page</h1>
+{% for message in messages %}
+{% if "Error" in message %}
+<div class="alert alert-danger">
+    <a class="close" href="#" data-dismiss="alert">×</a>
+
+    {{ message }}
+
+</div>
+
+{% else %}
+<div class="alert alert-success">
+    <a class="close" href="#" data-dismiss="alert">×</a>
+
+    {{ message }}
+
+</div>
+
+{% endif %}
+{% endfor %} 
 
 <form action="{% url 'search' %}">
    
@@ -10,4 +29,23 @@
 
     </form>
 
+    
+    <ul class="list-group">
+        <h3>Friend Requests</h3>
+          {% for request in requests%}
+          <form method="POST" action="{% url 'friends' %}">
+                  {% csrf_token %}
+     
+        <div class="card" style="width: 18rem;">
+              <div class="card-body">
+                                 
+                <h5 class="card-title">{{request.SentBy_id}} {{request.Status}}</h5>
+                <p class="card-text">{{request.DateTimeSent}}</p>
+                <button type="submit" class="btn btn-primary">Accept</button>
+                <input type="hidden" name="UserID" value="{{user.id}}">
+            
+              </div>
+            </div>
+          </form>
+            {%endfor%}
 {% endblock %}

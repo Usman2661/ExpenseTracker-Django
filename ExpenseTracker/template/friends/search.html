@@ -2,9 +2,42 @@
 {% block content %}
 <h1>Search Resuts</h1>
 <ul class="list-group">
-    {% for user in searchresults%}
-        <li class="list-group-item">{{user.first_name}}--{{user.last_name}}--{{user.username}}</li>
-   {%endfor%}
-      </ul>
+   
+    {% for message in messages %}
+    {% if "Error" in message %}
+    <div class="alert alert-danger">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+
+        {{ message }}
+
+    </div>
+
+    {% else %}
+    <div class="alert alert-success">
+        <a class="close" href="#" data-dismiss="alert">×</a>
+
+        {{ message }}
+
+    </div>
+
+    {% endif %}
+    {% endfor %}     
+    
+        {% for user in searchresults%}
+        <form method="POST" action="{% url 'search' %}">
+                {% csrf_token %}
+   
+      <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                               
+              <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+              <p class="card-text">Email: {{user.username}}</p>
+              <button type="submit" class="btn btn-primary">Add Friend</button>
+              <input type="hidden" name="UserID" value="{{user.id}}">
+          
+            </div>
+          </div>
+        </form>
+          {%endfor%}
 
 {% endblock %}
