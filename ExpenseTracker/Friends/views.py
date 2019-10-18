@@ -9,9 +9,33 @@ def index(request):
     if request.user.is_authenticated:
         MyUserID=request.user.id
         #myrequests=User.objects.filter(UserID_SentTo=MyUserID)
-        myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
+        #myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
+        #myrequests.SentTo_id.Username
+       
+        #myrequests = User.objects.filter(UserID_SentTo = MyUserID)
+        myrequests = Request.objects.filter(SentTo=MyUserID)
+        #.values_list('SentBy__username', 'SentBy__first_name','DateTimeSent')
+        #username=myrequests.SentBy__username
+        #fname=myrequests.SentBy__first_name
+        #date=myrequests.DateTimeSent
+        #myrequests.SentBy_id
+        #myrequests.SentBy
+        #myrequests.User.username
+        #myrequests.UserID_SentTo.username
+        #myrequests.SentTo_id.first_name
+        # print(username)
+        # print(fname)
+        # print(date)
         print(myrequests)
+        # data = []
+        # for res in results:
 
+        #     data.append( {
+        #         "Name": res.SentBy_id.first_name,
+        #         "Email": res.SentBy_id.username,
+        #         "DateTimeSent": res.DateTimeSent,
+        #         "Status": res.Status,
+        #     })
         #myrequests = Request.objects.filter(SentTo_id=MyUserID).values('User__first_name','User__last_name','User__username','DateTimeSent')
         # print(myrequests)
         context={

@@ -39,7 +39,7 @@
         <div class="card" style="width: 18rem;">
               <div class="card-body">
                                  
-                <h5 class="card-title">{{request.User.first_name}} {{request.User.username}}</h5>
+                <h5 class="card-title">{{request.SentBy_id}} {{request.Status}}</h5>
                 <p class="card-text">{{request.DateTimeSent}}</p>
                 <button type="submit" class="btn btn-primary">Accept</button>
                 <input type="hidden" name="UserID" value="{{user.id}}">
