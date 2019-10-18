@@ -1,47 +1,65 @@
 from django.shortcuts import render , redirect
 from django.contrib.auth.models import User,auth
 from django.db.models import Q
+from django.db import IntegrityError
 from django.contrib import messages
 from Friends.models import Request,Friend
 
 # Create your views here.
 def index(request):
     if request.user.is_authenticated:
-        MyUserID=request.user.id
-        #myrequests=User.objects.filter(UserID_SentTo=MyUserID)
-        #myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
-        #myrequests.SentTo_id.Username
-       
-        #myrequests = User.objects.filter(UserID_SentTo = MyUserID)
-        myrequests = Request.objects.filter(SentTo=MyUserID)
-        #.values_list('SentBy__username', 'SentBy__first_name','DateTimeSent')
-        #username=myrequests.SentBy__username
-        #fname=myrequests.SentBy__first_name
-        #date=myrequests.DateTimeSent
-        #myrequests.SentBy_id
-        #myrequests.SentBy
-        #myrequests.User.username
-        #myrequests.UserID_SentTo.username
-        #myrequests.SentTo_id.first_name
-        # print(username)
-        # print(fname)
-        # print(date)
-        print(myrequests)
-        # data = []
-        # for res in results:
+        if request.method=='POST':
+            MyID=request.user.id
+            FriendID=request.POST['UserID']
+            print(FriendID)
 
-        #     data.append( {
-        #         "Name": res.SentBy_id.first_name,
-        #         "Email": res.SentBy_id.username,
-        #         "DateTimeSent": res.DateTimeSent,
-        #         "Status": res.Status,
-        #     })
-        #myrequests = Request.objects.filter(SentTo_id=MyUserID).values('User__first_name','User__last_name','User__username','DateTimeSent')
-        # print(myrequests)
-        context={
-            'requests':myrequests,
-        }
-        return render(request,"friends/index.html",context)
+            try:
+                FriendAdded = Friend.objects.create(UserID_id=MyID, FriendID_id=FriendID)
+                RequestUpdate = Request.objects.filter(Q(SentBy_id=FriendID)&Q(SentTo_id=MyID)).update(Status=True)
+            except IntegrityError:
+                messages.error(request,'Error: There has been an error while adding friend')
+                return redirect('friends')
+            else:
+                messages.success(request,'Friend Added Succesfully')
+                return redirect('friends')
+        else:
+
+            MyUserID=request.user.id
+            #myrequests=User.objects.filter(UserID_SentTo=MyUserID)
+            #myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
+            #myrequests.SentTo_id.Username
+            #myrequests = User.objects.filter(UserID_SentTo = MyUserID)
+            myfriends= Friend.objects.filter(UserID_id=MyUserID)
+            myrequests = Request.objects.filter(Q(SentTo=MyUserID)&Q(Status=False))
+            #.values_list('SentBy__username', 'SentBy__first_name','DateTimeSent')
+            #username=myrequests.SentBy__username
+            #fname=myrequests.SentBy__first_name
+            #date=myrequests.DateTimeSent
+            #myrequests.SentBy_id
+            #myrequests.SentBy
+            #myrequests.User.username
+            #myrequests.UserID_SentTo.username
+            #myrequests.SentTo_id.first_name
+            # print(username)
+            # print(fname)
+            # print(date)
+            print(myrequests)
+            # data = []
+            # for res in results:
+
+            #     data.append( {
+            #         "Name": res.SentBy_id.first_name,
+            #         "Email": res.SentBy_id.username,
+            #         "DateTimeSent": res.DateTimeSent,
+            #         "Status": res.Status,
+            #     })
+            #myrequests = Request.objects.filter(SentTo_id=MyUserID).values('User__first_name','User__last_name','User__username','DateTimeSent')
+            # print(myrequests)
+            context={
+                'requests':myrequests,
+                'friends':myfriends,
+            }
+            return render(request,"friends/index.html",context)
     else:
         return render('login')
 
