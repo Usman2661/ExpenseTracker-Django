@@ -5,11 +5,15 @@ from django.contrib import messages
 from Friends.models import Request,Friend
 
 # Create your views here.
-
 def index(request):
     if request.user.is_authenticated:
         MyUserID=request.user.id
-        myrequests = Request.objects.all().filter(SentTo=MyUserID)
+        #myrequests=User.objects.filter(UserID_SentTo=MyUserID)
+        myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
+        print(myrequests)
+
+        #myrequests = Request.objects.filter(SentTo_id=MyUserID).values('User__first_name','User__last_name','User__username','DateTimeSent')
+        # print(myrequests)
         context={
             'requests':myrequests,
         }
@@ -48,7 +52,9 @@ def search(request):
                 
         else:
             search=request.GET['search']
-            result = User.objects.all().filter(Q(first_name__icontains=search)|Q(last_name__icontains=search))
+            UserID=request.user.id
+            result = User.objects.all().filter(Q(first_name__icontains=search)|Q(last_name__icontains=search)|(Q(username__icontains = search )))
+            result=result.filter(~Q(id = UserID))
             context = {
                 "searchresults":result,
             }
