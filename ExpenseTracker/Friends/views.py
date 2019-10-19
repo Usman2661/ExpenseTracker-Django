@@ -15,6 +15,7 @@ def index(request):
 
             try:
                 FriendAdded = Friend.objects.create(UserID_id=MyID, FriendID_id=FriendID)
+                FriendAddedToOther = Friend.objects.create(UserID_id=FriendID, FriendID_id=MyID)
                 RequestUpdate = Request.objects.filter(Q(SentBy_id=FriendID)&Q(SentTo_id=MyID)).update(Status=True)
             except IntegrityError:
                 messages.error(request,'Error: There has been an error while adding friend')
@@ -29,8 +30,10 @@ def index(request):
             #myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
             #myrequests.SentTo_id.Username
             #myrequests = User.objects.filter(UserID_SentTo = MyUserID)
-            myfriends= Friend.objects.filter(UserID_id=MyUserID)
-            myrequests = Request.objects.filter(Q(SentTo=MyUserID)&Q(Status=False))
+            myfriends= Friend.objects.select_related().filter(UserID_id=MyUserID)
+            myrequests = Request.objects.select_related().filter(Q(SentTo=MyUserID)&Q(Status=False))
+
+            print(myfriends.query)
             #.values_list('SentBy__username', 'SentBy__first_name','DateTimeSent')
             #username=myrequests.SentBy__username
             #fname=myrequests.SentBy__first_name
@@ -43,6 +46,10 @@ def index(request):
             # print(username)
             # print(fname)
             # print(date)
+
+            #sentbyname=myrequests.DateTimeSent
+            
+            #print(sentbyname)
             print(myrequests)
             # data = []
             # for res in results:

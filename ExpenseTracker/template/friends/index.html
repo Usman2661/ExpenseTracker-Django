@@ -1,5 +1,7 @@
 {% extends 'base.html'%}
+{% load static %}
 {% block content%}
+<link rel="stylesheet" href="{% static 'css/pagescss/friends.css'%}" />
 <h1> Welcome to the friends page</h1>
 {% for message in messages %}
 {% if "Error" in message %}
@@ -39,7 +41,7 @@
         <div class="card" style="width: 18rem;">
               <div class="card-body">
                                  
-                <h5 class="card-title">{{request.SentBy_id}} {{request.Status}}</h5>
+                <h5 class="card-title">{{request.SentBy.first_name}} {{request.SentBy.username}}</h5>
                 <p class="card-text">{{request.DateTimeSent}}</p>
                 <button type="submit" class="btn btn-primary">Accept</button>
                 <input type="hidden" name="UserID" value="{{request.SentBy_id}}">
@@ -56,11 +58,13 @@
               <div class="card" style="width: 18rem;">
                     <div class="card-body">
                                        
-                      <h5 class="card-title">{{friend.FriendID_id}} </h5>
+                      <h5 class="card-title">{{friend.FriendID.first_name}}  {{friend.FriendID.username}} </h5>
                       <p class="card-text">{{friend.FriendSince}}</p>
                     </div>
                   </div>
              
                   {%endfor%}
+
+          
 
 {% endblock %}
