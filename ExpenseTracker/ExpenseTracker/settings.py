@@ -34,11 +34,13 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'accounts.apps.AccountsConfig',
     'expense.apps.ExpenseConfig',
+    'api.apps.ApiConfig',
     'Friends.apps.FriendsConfig',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'rest_framework',
     'django.contrib.staticfiles',
 ]
 
