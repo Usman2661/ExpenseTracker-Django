@@ -1,9 +1,15 @@
+import json
 from django.shortcuts import render , redirect
 from django.contrib.auth.models import User,auth
 from django.db.models import Q
 from django.db import IntegrityError
 from django.contrib import messages
 from Friends.models import Request,Friend
+from api.models import Passenger
+from django.db.models import Count,Sum
+from django.http import JsonResponse
+from expense.models import Expenses
+import requests
 
 # Create your views here.
 def index(request):
@@ -113,23 +119,17 @@ def search(request):
 
 def chart_data(request):
 
-    dataset = Passenger.objects \
-        .values('embarked') \
-        .exclude(embarked='') \
-        .annotate(total=Count('embarked')) \
-        .order_by('embarked')
+    UserID=request.user.id
+    dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
 
-    port_display_name = dict()
-    
-    for port_tuple in Passenger.PORT_CHOICES:
-        port_display_name[port_tuple[0]] = port_tuple[1]
-
+    dataset2=requests.get('http://localhost:8000/api/expense/')
+    chartdata= dataset2.json()
     chart = {
         'chart': {'type': 'pie'},
-        'title': {'text': 'Titanic Survivors by Ticket Class'},
+        'title': {'text': 'Spending By Catagory Wise'},
         'series': [{
-            'name': 'Embarkation Port',
-            'data': list(map(lambda row: {'name': port_display_name[row['embarked']], 'y': row['total']}, dataset))
+            'name': 'Toal Amount',
+            'data': list(map(lambda row: {'name': row['Catagory'], 'y': row['Amount']}, chartdata))
         }]
     }
 

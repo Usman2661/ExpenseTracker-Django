@@ -7,6 +7,9 @@ from rest_framework import viewsets
 
 class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
 
+    allow_null = True
+    many = True
+
     class Meta:
         model = Expenses
         fields = ('User_ID_id','Amount', 'Catagory', 'Date_Time',)
@@ -20,7 +23,9 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
         id = self.request.query_params.get('UserID')
         if id is None:
-            queryset = Expenses.objects.aggregate(Sum('Amount'))
+            #queryset = Expenses.objects.all().aggregate(Sum('Amount'))
+            queryset=Expenses.objects.annotate(totalExpense=Sum('Amount'))
+
         else:
             queryset = Expenses.objects.filter(User_ID_id=id).aggregate(Sum('Amount'))
         return queryset
