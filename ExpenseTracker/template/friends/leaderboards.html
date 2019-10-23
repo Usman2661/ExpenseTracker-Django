@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block content%}
+<link rel="stylesheet" href="{% static 'css/pagescss/leaderboards.css'%}" />
+
+<h1>Welcome to leaderboards</h1>
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Total Amount Spent</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for leader in leaderboards%}
+      <tr>
+        <th scope="row">1</th>
+        <td>{{leader.User_ID}}</td>
+        <td>{{leader.TotalExpense}}</td>
+      </tr>
+      {% endfor %}
+    
+    </tbody>
+  </table>
+
+{%endblock%}

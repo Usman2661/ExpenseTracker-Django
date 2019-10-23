@@ -79,7 +79,14 @@ def index(request):
 
 def leaderboards(request):
     if request.user.is_authenticated:
-        return render("friends/index.html")
+        leaderboard= Expenses.objects.select_related().values('User_ID').annotate(TotalExpense=Sum('Amount')).order_by('-TotalExpense')
+        #leaderboard= Expenses.objects.raw('SELECT "expense_expenses.User_ID_id", SUM(expense_expenses.Amount) as TotalExpense FROM expense_expenses Group By User_ID Order by TotalExpense DESC')
+        print(leaderboard)
+        print(leaderboard.query)
+        context={
+            'leaderboards':leaderboard,
+        }
+        return render(request,"friends/leaderboards.html",context)
     else:
         return render('login')
 
@@ -121,18 +128,48 @@ def chart_data(request):
 
     UserID=request.user.id
     dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
+    #dataset = Expenses.objects.values('Date_Time').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
+    #print(dataset)
 
-    dataset2=requests.get('http://localhost:8000/api/expense/')
-    chartdata= dataset2.json()
+
+    # dataset2=requests.get('http://localhost:8000/api/expense/')
+    # chartdata= dataset2.json()
+
+    # print(chartdata)
+
+
     chart = {
         'chart': {'type': 'pie'},
-        'title': {'text': 'Spending By Catagory Wise'},
+        'title': {'text': 'Spending Catagory Wise'},
         'series': [{
-            'name': 'Toal Amount',
-            'data': list(map(lambda row: {'name': row['Catagory'], 'y': row['Amount']}, chartdata))
+            'name': 'Total Amount',
+            'data': list(map(lambda row: {'name': row['Catagory'], 'y': row['totalExpense']}, dataset))
         }]
     }
 
     return JsonResponse(chart)
 
-    
+def line_chart(request):
+
+    UserID=request.user.id
+    dataset = Expenses.objects.values('Date_Time').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
+
+    categories = list()
+    totalExpense=list()
+
+
+    for mydata in dataset:
+        categories.append(mydata['Date_Time'].date())
+        totalExpense.append(mydata['totalExpense'])    
+
+    chart = {
+        'chart': {'type': 'column'},
+        'title': {'text': 'Spending Date Wise'},
+        'xAxis': {'categories': categories},
+        'series': [{
+            'name': 'Total Amount',
+            'data': totalExpense
+        }]
+    }
+
+    return JsonResponse(chart)

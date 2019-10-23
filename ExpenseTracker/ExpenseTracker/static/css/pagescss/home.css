@@ -46,6 +46,10 @@ and (orientation : portrait) {
 /* 1366 by 768 Most Used Screen*/
 @media only screen
 and (min-width : 1301px) and (max-width:1380px) {
+    .container{
+        margin-left:50px;
+        margin-top:0px;
+    }
 
 
 }

@@ -5,18 +5,19 @@ from django.db.models import Sum
 from rest_framework import viewsets
 
 
-class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
+class ExpenseSerializer(serializers.ModelSerializer):
 
-    allow_null = True
-    many = True
+    totalExpense = serializers.IntegerField()
+    many=True
 
     class Meta:
         model = Expenses
-        fields = ('User_ID_id','Amount', 'Catagory', 'Date_Time',)
+        fields = ['User_ID_id','Amount', 'Catagory', 'Date_Time','totalExpense']
 
 class ExpenseViewSet(viewsets.ModelViewSet):
 
     Model = Expenses
+    # queryset = Expenses.objects.all()
     serializer_class = ExpenseSerializer
 
     def get_queryset(self):
@@ -24,8 +25,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         id = self.request.query_params.get('UserID')
         if id is None:
             #queryset = Expenses.objects.all().aggregate(Sum('Amount'))
-            queryset=Expenses.objects.annotate(totalExpense=Sum('Amount'))
-
+            queryset= Expenses.objects.values('Catagory','Amount','Date_Time').annotate(totalExpense=Sum('Amount'))
         else:
-            queryset = Expenses.objects.filter(User_ID_id=id).aggregate(Sum('Amount'))
+            queryset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=id)
         return queryset

@@ -2,6 +2,8 @@
 {% load static %}
 {% block content %}
 
+<link rel="stylesheet" href="{% static 'css/pagescss/home.css'%}" />
+
 <div class="card" style="width: 18rem;">
     {% for message in messages %}
     {% if "Error" in message %}
@@ -125,16 +127,69 @@
             </div>
           </div>
 
-          <div id="container" data-url="{% url 'chart_data' %}"></div>
+          <div class="form-group">
+              <label for="exampleFormControlSelect1">Filter Graph</label>
+              <select class="form-control" id="filteroptions">
+                <option value="All">All</option>
+                <option value="Today">Today</option>
+                <option value="ThisWeek">This Week</option>
+                <option value="LastWeek">Last Week</option>
+                <option value="ThisMonth">This Month</option>
+                <option value="LastMonth">Last Month</option>
+              </select>
+          
+<div class="myLittleGraph" style="margin-left:10px">
+  <div id="container" class="container" style="margin-left:-10px;"></div>
+</div>
           <script>
-            $.ajax({
-              url: $("#container").attr("data-url"),
-              dataType: 'json',
-              success: function (data) {
-                Highcharts.chart("container", data);
-              }
+              $( document ).ready(function() {
+                piechart();
+                linechart();
             });
+
+
+              $('#filteroptions').on('change', function() {
+                var time=this.value;
+               
+                localStorage.setItem('time', time);
+
+                piechart();
+                linechart();
+              });
+
+              
+
+            
+              function piechart(){
+                var time=localStorage.getItem('time');
+                $.ajax({
+                  url: 'http://localhost:8000/chart_data'+'?time='+time,
+                  dataType: 'json',
+                  success: function (data) {
+                    Highcharts.chart("container", data);
+                  }
+                });
+              }
+         
           </script>
+
+          <div class="myLittleGraph" style="margin-left:10px">
+              <div id="container1" class="container1" style="margin-left:-10px;"></div>
+            </div>
+                      <script>
+
+                        function linechart(){
+                          var time=localStorage.getItem('time');
+
+                          $.ajax({
+                             url: 'http://localhost:8000/line_chart'+'?time='+time,
+                             dataType: 'json',
+                             success: function (data) {
+                               Highcharts.chart("container1", data);
+                             }
+                           });
+                        }
+                      </script>
 
 {%endblock%}
 <script type="text/javascript">
