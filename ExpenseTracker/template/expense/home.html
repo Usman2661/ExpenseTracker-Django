@@ -4,7 +4,20 @@
 
 <link rel="stylesheet" href="{% static 'css/pagescss/home.css'%}" />
 
-<div class="card" style="width: 18rem;">
+<div class="form-group">
+    <label for="exampleFormControlSelect1">Filter Graph</label>
+    <select class="form-control" id="filteroptions">
+      <option value="All">All</option>
+      <option value="Today">Today</option>
+      <option value="ThisWeek">This Week</option>
+      <option value="LastWeek">Last Week</option>
+      <option value="ThisMonth">This Month</option>
+      <option value="LastMonth">Last Month</option>
+    </select>
+
+    <p>Date From: <input type="text" id="datepicker"></p>
+    <p>Date To: <input type="text" id="datepicker1"></p>
+<div class="card" style="width:400px;">
     {% for message in messages %}
     {% if "Error" in message %}
     <div class="alert alert-danger">
@@ -13,7 +26,6 @@
         {{ message }}
 
     </div>
-
     {% else %}
     <div class="alert alert-success">
         <a class="close" href="#" data-dismiss="alert">×</a>
@@ -40,6 +52,12 @@
                   
                   </div>
 </div>
+
+
+<div id="container" class="container" style="margin-top:-700px;margin-left:600px; width:500px;"></div>
+
+<div id="container1" class="container1" style="margin-left:600px;width:700px;"></div>
+
 
 
       
@@ -127,30 +145,15 @@
             </div>
           </div>
 
-          <div class="form-group">
-              <label for="exampleFormControlSelect1">Filter Graph</label>
-              <select class="form-control" id="filteroptions">
-                <option value="All">All</option>
-                <option value="Today">Today</option>
-                <option value="ThisWeek">This Week</option>
-                <option value="LastWeek">Last Week</option>
-                <option value="ThisMonth">This Month</option>
-                <option value="LastMonth">Last Month</option>
-              </select>
-
-              <p>Date: <input type="text" id="datepicker"></p>
 
           
-<div class="myLittleGraph" style="margin-left:10px">
-  <div id="container" class="container" style="margin-left:-10px;"></div>
-</div>
+
 <script>
     $( function() {
       $( "#datepicker" ).datepicker({
+        
          dateFormat: 'yy-mm-dd' ,
-
         onSelect: function(dateText) {
-        alert("Selected date: " + dateText + "; input's current value: " + this.value);
 
           var datepick=this.value;
 
@@ -159,6 +162,25 @@
           linechart();
       }
       });
+      var datepick=localStorage.getItem('datePick');
+      $('#datepicker').datepicker('setDate', datepick);
+
+    } );
+
+    $( function() {
+      $( "#datepicker1" ).datepicker({
+         dateFormat: 'yy-mm-dd' ,
+        onSelect: function(dateText) {
+
+          var datepick=this.value;
+
+          localStorage.setItem('datePick1',datepick)
+          piechart();
+          linechart();
+      }
+      });
+      var datepick1=localStorage.getItem('datePick1');
+      $('#datepicker1').datepicker('setDate', datepick1);
     } );
     </script>
           <script>
@@ -166,7 +188,6 @@
                 piechart();
                 linechart();
             });
-
 
               $('#filteroptions').on('change', function() {
                 var time=this.value;
@@ -183,10 +204,12 @@
               function piechart(){
                 var time=localStorage.getItem('time');
                 var datepick=localStorage.getItem('datePick');
+                var datepick1=localStorage.getItem('datePick1');
+
                 
                 //var datepick='23/10/2019'
                 $.ajax({
-                  url: 'http://localhost:8000/chart_data'+'?time='+time+'&mydate='+datepick,
+                  url: 'http://localhost:8000/chart_data'+'?time='+time+'&mydate='+datepick+'&mydate1='+datepick1,
                   dataType: 'json',
                   success: function (data) {
                     Highcharts.chart("container", data);
@@ -196,17 +219,15 @@
          
           </script>
 
-          <div class="myLittleGraph" style="margin-left:10px">
-              <div id="container1" class="container1" style="margin-left:-10px;"></div>
-            </div>
                       <script>
 
                         function linechart(){
                           var time=localStorage.getItem('time');
                           var datepick=localStorage.getItem('datePick');
+                          var datepick1=localStorage.getItem('datePick1');
 
                           $.ajax({
-                             url: 'http://localhost:8000/line_chart'+'?time='+time+'&mydate='+datepick,
+                             url: 'http://localhost:8000/line_chart'+'?time='+time+'&mydate='+datepick+'&mydate1='+datepick1,
                              dataType: 'json',
                              success: function (data) {
                                Highcharts.chart("container1", data);
