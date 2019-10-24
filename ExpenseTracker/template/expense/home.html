@@ -137,10 +137,30 @@
                 <option value="ThisMonth">This Month</option>
                 <option value="LastMonth">Last Month</option>
               </select>
+
+              <p>Date: <input type="text" id="datepicker"></p>
+
           
 <div class="myLittleGraph" style="margin-left:10px">
   <div id="container" class="container" style="margin-left:-10px;"></div>
 </div>
+<script>
+    $( function() {
+      $( "#datepicker" ).datepicker({
+         dateFormat: 'yy-mm-dd' ,
+
+        onSelect: function(dateText) {
+        alert("Selected date: " + dateText + "; input's current value: " + this.value);
+
+          var datepick=this.value;
+
+          localStorage.setItem('datePick',datepick)
+          piechart();
+          linechart();
+      }
+      });
+    } );
+    </script>
           <script>
               $( document ).ready(function() {
                 piechart();
@@ -162,8 +182,11 @@
             
               function piechart(){
                 var time=localStorage.getItem('time');
+                var datepick=localStorage.getItem('datePick');
+                
+                //var datepick='23/10/2019'
                 $.ajax({
-                  url: 'http://localhost:8000/chart_data'+'?time='+time,
+                  url: 'http://localhost:8000/chart_data'+'?time='+time+'&mydate='+datepick,
                   dataType: 'json',
                   success: function (data) {
                     Highcharts.chart("container", data);
@@ -180,9 +203,10 @@
 
                         function linechart(){
                           var time=localStorage.getItem('time');
+                          var datepick=localStorage.getItem('datePick');
 
                           $.ajax({
-                             url: 'http://localhost:8000/line_chart'+'?time='+time,
+                             url: 'http://localhost:8000/line_chart'+'?time='+time+'&mydate='+datepick,
                              dataType: 'json',
                              success: function (data) {
                                Highcharts.chart("container1", data);

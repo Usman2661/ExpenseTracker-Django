@@ -8,7 +8,9 @@ from Friends.models import Request,Friend
 from api.models import Passenger
 from django.db.models import Count,Sum
 from django.http import JsonResponse
+from datetime import datetime
 from expense.models import Expenses
+from django.utils.dateparse import parse_date
 import requests
 
 # Create your views here.
@@ -126,8 +128,22 @@ def search(request):
 
 def chart_data(request):
 
+    time=request.GET.get('time')
+    mydate=request.GET.get('mydate')
+    #lastconnection = datetime.strptime(mydate, '%d/%m/%Y').strftime('%Y-%m-%d')
+   
+    ddate=parse_date(mydate)
+    theyear = ddate.year
+    theday = ddate.day
+    themonth = ddate.month
+    
     UserID=request.user.id
-    dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
+    if time=='All':
+        dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
+    else:
+        dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(Q(User_ID_id=UserID)&Q(Date_Time__year=theyear,Date_Time__month=themonth,Date_Time__day=theday))
+
+
     #dataset = Expenses.objects.values('Date_Time').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
     #print(dataset)
 
