@@ -40,6 +40,7 @@ def index(request):
             #myrequests.SentTo_id.Username
             #myrequests = User.objects.filter(UserID_SentTo = MyUserID)
             myfriends= Friend.objects.select_related().filter(UserID_id=MyUserID)
+
             myrequests = Request.objects.select_related().filter(Q(SentTo=MyUserID)&Q(Status=False))
 
             print(myfriends.query)
@@ -82,8 +83,9 @@ def index(request):
 
 def leaderboards(request):
     if request.user.is_authenticated:
-        leaderboard= Expenses.objects.select_related().values('User_ID').annotate(TotalExpense=Sum('Amount')).order_by('-TotalExpense')
+        leaderboard= Expenses.objects.select_related().annotate(TotalExpense=Sum('Amount')).order_by('-TotalExpense')
         #leaderboard= Expenses.objects.raw('SELECT "expense_expenses.User_ID_id", SUM(expense_expenses.Amount) as TotalExpense FROM expense_expenses Group By User_ID Order by TotalExpense DESC')
+        #leaderboard = Expenses.objects.raw('SELECT "id","Amount", "Catagory" FROM expense_expenses')
         print(leaderboard)
         print(leaderboard.query)
         context={
