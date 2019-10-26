@@ -16,13 +16,31 @@
     <tbody>
         {% for leader in leaderboards%}
       <tr>
-        <th scope="row">1</th>
-        <td>{{leader.User_ID}}</td>
+        <th scope="row">{{forloop.counter}}</th>
+        {% if leader.id == request.user.id %}
+        <td> <b> {{leader.first_name}} {{leader.last_name}} (You)</b> </td>
+        <td><b>{{leader.TotalExpense}}</b></td>
+        {% else %}
+        <td>{{leader.first_name}} {{leader.last_name}}  </td>
         <td>{{leader.TotalExpense}}</td>
+        {%  endif %}
       </tr>
       {% endfor %}
     
     </tbody>
   </table>
+
+
+  <div id="container" data-url="{% url 'pie_chart_leaderboard' %}"></div>
+
+  <script>
+      $.ajax({
+        url: $("#container").attr("data-url"),
+        dataType: 'json',
+        success: function (data) {
+          Highcharts.chart("container", data);
+        }
+      });
+    </script>
 
 {%endblock%}

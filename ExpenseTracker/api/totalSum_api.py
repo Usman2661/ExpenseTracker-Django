@@ -25,7 +25,8 @@ class ExpenseViewSet(viewsets.ModelViewSet):
         id = self.request.query_params.get('UserID')
         if id is None:
             #queryset = Expenses.objects.all().aggregate(Sum('Amount'))
-            queryset= Expenses.objects.values('Catagory','Amount','Date_Time').annotate(totalExpense=Sum('Amount'))
+            queryset= Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount'))
         else:
             queryset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=id)
+            #queryset = Expenses.objects.raw('SELECT *,SUM("expense_expenses"."Amount") as totalExpense, "expense_expenses"."Catagory" From "expense_expenses" WHERE "expense_expenses"."User_ID_id"=13 GROUP BY "expense_expenses"."Catagory" ,"expense_expenses"."id";')
         return queryset

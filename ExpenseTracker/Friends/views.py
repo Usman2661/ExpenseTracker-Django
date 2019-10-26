@@ -39,7 +39,7 @@ def index(request):
             #myrequests = Request.objects.select_related('SentTo').filter(SentTo_id=MyUserID)
             #myrequests.SentTo_id.Username
             #myrequests = User.objects.filter(UserID_SentTo = MyUserID)
-            myfriends= Friend.objects.select_related().filter(UserID_id=MyUserID)
+            myfriends= Friend.objects.select_related().filter(UserID_id=MyUserID).exclude(FriendID_id=MyUserID)
 
             myrequests = Request.objects.select_related().filter(Q(SentTo=MyUserID)&Q(Status=False))
 
@@ -83,11 +83,12 @@ def index(request):
 
 def leaderboards(request):
     if request.user.is_authenticated:
-        leaderboard= Expenses.objects.select_related().annotate(TotalExpense=Sum('Amount')).order_by('-TotalExpense')
-        #leaderboard= Expenses.objects.raw('SELECT "expense_expenses.User_ID_id", SUM(expense_expenses.Amount) as TotalExpense FROM expense_expenses Group By User_ID Order by TotalExpense DESC')
+        UserID=request.user.id
+        #leaderboard= Expenses.objects.select_related().values("User_ID_id").annotate(TotalExpense=Sum('Amount')).order_by('-TotalExpense')
+        leaderboard= Expenses.objects.raw('''SELECT "expense_expenses"."User_ID_id","auth_user"."id","auth_user"."first_name", "auth_user"."last_name", SUM("expense_expenses"."Amount") AS "TotalExpense" FROM "expense_expenses" INNER JOIN "Friends_friend" ON ("expense_expenses"."User_ID_id"="Friends_friend"."FriendID_id") INNER JOIN auth_user ON  ("expense_expenses"."User_ID_id"="auth_user"."id") WHERE "Friends_friend"."UserID_id"=%s GROUP BY "expense_expenses"."User_ID_id","auth_user"."id" ORDER BY "TotalExpense" DESC''',[UserID])
         #leaderboard = Expenses.objects.raw('SELECT "id","Amount", "Catagory" FROM expense_expenses')
         print(leaderboard)
-        print(leaderboard.query)
+        #print(leaderboard.query)
         context={
             'leaderboards':leaderboard,
         }
@@ -128,98 +129,3 @@ def search(request):
             return render(request,"friends/search.html",context)
     else:
         return render('login')
-
-def chart_data(request):
-
-    time=request.GET.get('time')
-    mydate=request.GET.get('mydate')
-    mydate1=request.GET.get('mydate1')
-    #lastconnection = datetime.strptime(mydate, '%d/%m/%Y').strftime('%Y-%m-%d')
-   
-    ddate=parse_date(mydate)
-    theyear = ddate.year
-    theday = ddate.day
-    themonth = ddate.month
-
-    ddate1=parse_date(mydate1)
-    theyear1 = ddate1.year
-    theday1 = ddate1.day
-    themonth1 = ddate1.month
-
-    first_date = datetime.date(theyear, themonth, theday)
-    last_date = datetime.date(theyear1, themonth1, theday1)
-    
-    UserID=request.user.id
-    if time=='All':
-        dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
-    else:
-        dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(Q(User_ID_id=UserID)&Q(Date_Time__range=(first_date, last_date)))
-
-
-    #Date_Time__year=theyear,Date_Time__month=themonth,Date_Time__day=theday
-    #dataset = Expenses.objects.values('Date_Time').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
-    #print(dataset)
-
-
-    # dataset2=requests.get('http://localhost:8000/api/expense/')
-    # chartdata= dataset2.json()
-
-    # print(chartdata)
-
-
-    chart = {
-        'chart': {'type': 'pie'},
-        'title': {'text': 'Spending Catagory Wise'},
-        'series': [{
-            'name': 'Total Amount',
-            'data': list(map(lambda row: {'name': row['Catagory'], 'y': row['totalExpense']}, dataset))
-        }]
-    }
-
-    return JsonResponse(chart)
-
-def line_chart(request):
-
-    time=request.GET.get('time')
-    mydate=request.GET.get('mydate')
-    mydate1=request.GET.get('mydate1')
-    #lastconnection = datetime.strptime(mydate, '%d/%m/%Y').strftime('%Y-%m-%d')
-   
-    ddate=parse_date(mydate)
-    theyear = ddate.year
-    theday = ddate.day
-    themonth = ddate.month
-
-    ddate1=parse_date(mydate1)
-    theyear1 = ddate1.year
-    theday1 = ddate1.day
-    themonth1 = ddate1.month
-
-    first_date = datetime.date(theyear, themonth, theday)
-    last_date = datetime.date(theyear1, themonth1, theday1)
-
-    UserID=request.user.id
-    if time=='All':
-        dataset = Expenses.objects.values('Date_Time__date').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
-    else:
-        dataset = Expenses.objects.values('Date_Time__date').annotate(totalExpense=Sum('Amount')).filter(Q(User_ID_id=UserID)&Q(Date_Time__range=(first_date, last_date)))
-
-    categories = list()
-    totalExpense=list()
-
-
-    for mydata in dataset:
-        categories.append(mydata['Date_Time__date'])
-        totalExpense.append(mydata['totalExpense'])    
-
-    chart = {
-        'chart': {'type': 'column'},
-        'title': {'text': 'Spending Date Wise'},
-        'xAxis': {'categories': categories},
-        'series': [{
-            'name': 'Total Amount',
-            'data': totalExpense
-        }]
-    }
-
-    return JsonResponse(chart)

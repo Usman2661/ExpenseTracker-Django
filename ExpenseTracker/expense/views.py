@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from expense.models import Catagory,Expenses
+from Friends.models import Friend,Request
 from django.contrib import messages
 from django.contrib.auth.models import User,auth
 from django.contrib.auth import authenticate
@@ -51,16 +52,24 @@ def index(request):
 
         else:
             UserID=request.user.id
+            checkrequest = Friend.objects.all().filter(Q(UserID_id=UserID)&Q(FriendID_id=UserID))
+
+            if not checkrequest:
+                try:
+                    CreateFriend = Friend.objects.create(UserID_id=UserID, FriendID_id=UserID)
+                except IntegrityError:
+                    return redirect('home')
+                else:
+                    return redirect('home')
+            
             MyCatagories = Catagory.objects.filter(Q(User_ID=UserID)|Q(User_ID=0))
             MyExpense = Expenses.objects.all().filter(User_ID_id=UserID)
-            # MyGraph = Expenses.objects.values('')
-            print(MyCatagories)
-            print(MyExpense)
             context={
                 "MyCatagories":MyCatagories,
                 "MyExpense":MyExpense,
             }
             return render(request,'expense/home.html',context)
-
+            
+               
     else:
         return redirect("login")
