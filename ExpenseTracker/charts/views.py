@@ -132,7 +132,10 @@ def pie_chart_leaderboard(request):
     totalExpense=list()
 
     for mydata in dataset:
-        names.append({'name':mydata.first_name , 'y':mydata.TotalExpense})
+        if mydata.id == request.user.id:
+            names.append({'name':mydata.first_name+ ' '+ mydata.last_name+' (You) ' , 'y':mydata.TotalExpense , 'color':'#53F48D'})
+        else:
+            names.append({'name':mydata.first_name+ ' '+mydata.last_name , 'y':mydata.TotalExpense})
 
     print(names)
     chart = {
@@ -141,6 +144,56 @@ def pie_chart_leaderboard(request):
         'series': [{
         'name': 'Total Amount',
         'data': names,
+        }]
+    }
+
+    return JsonResponse(chart)
+
+def line_chart_leaderboard(request):
+
+    # time=request.GET.get('time')
+    # mydate=request.GET.get('mydate')
+    # mydate1=request.GET.get('mydate1')
+    # #lastconnection = datetime.strptime(mydate, '%d/%m/%Y').strftime('%Y-%m-%d')
+   
+    # ddate=parse_date(mydate)
+    # theyear = ddate.year
+    # theday = ddate.day
+    # themonth = ddate.month
+
+    # ddate1=parse_date(mydate1)
+    # theyear1 = ddate1.year
+    # theday1 = ddate1.day
+    # themonth1 = ddate1.month
+
+    # first_date = datetime.date(theyear, themonth, theday)
+    # last_date = datetime.date(theyear1, themonth1, theday1)
+
+    UserID=request.user.id
+    # if time=='All':
+    #     dataset = Expenses.objects.values('Date_Time__date').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=UserID)
+    # else:
+    dataset =  Expenses.objects.raw('''SELECT "expense_expenses"."User_ID_id","auth_user"."id","auth_user"."first_name", "auth_user"."last_name", SUM("expense_expenses"."Amount") AS "TotalExpense" FROM "expense_expenses" INNER JOIN "Friends_friend" ON ("expense_expenses"."User_ID_id"="Friends_friend"."FriendID_id") INNER JOIN auth_user ON  ("expense_expenses"."User_ID_id"="auth_user"."id") WHERE "Friends_friend"."UserID_id"=%s GROUP BY "expense_expenses"."User_ID_id","auth_user"."id" ORDER BY "TotalExpense" DESC''',[UserID])
+
+    names = list()
+    totalExpense=list()
+
+
+    for mydata in dataset:
+        if mydata.id==request.user.id:
+            names.append(mydata.first_name + ' '+ mydata.last_name+ " (You)" )
+            totalExpense.append({"y":mydata.TotalExpense, "color":"#53F48D"})    
+        else:
+            names.append(mydata.first_name + ' '+ mydata.last_name )
+            totalExpense.append({"y":mydata.TotalExpense , "color":"#8E44AD"} )    
+
+    chart = {
+        'chart': {'type': 'column'},
+        'title': {'text': 'Spending Leader Boards'},
+        'xAxis': {'categories': names},
+        'series': [{
+            'name': 'Total Amount',
+            'data': totalExpense
         }]
     }
 

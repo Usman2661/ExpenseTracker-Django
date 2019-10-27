@@ -19,10 +19,10 @@
         <th scope="row">{{forloop.counter}}</th>
         {% if leader.id == request.user.id %}
         <td> <b> {{leader.first_name}} {{leader.last_name}} (You)</b> </td>
-        <td><b>{{leader.TotalExpense}}</b></td>
+        <td><b>£ {{leader.TotalExpense}}</b></td>
         {% else %}
         <td>{{leader.first_name}} {{leader.last_name}}  </td>
-        <td>{{leader.TotalExpense}}</td>
+        <td>£ {{leader.TotalExpense}}</td>
         {%  endif %}
       </tr>
       {% endfor %}
@@ -42,5 +42,17 @@
         }
       });
     </script>
+
+    <div id="container1" data-url="{% url 'line_chart_leaderboard' %}"></div>
+
+    <script>
+        $.ajax({
+          url: $("#container1").attr("data-url"),
+          dataType: 'json',
+          success: function (data) {
+            Highcharts.chart("container1", data);
+          }
+        });
+      </script>
 
 {%endblock%}
