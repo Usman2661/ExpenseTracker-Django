@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h1>Search Resuts</h1>
+
+<link rel="stylesheet" href="{% static 'css/pagescss/search.css'%}" />
+
+<h1 >Search Resuts</h1>
 <ul class="list-group">
    
     {% for message in messages %}
@@ -27,7 +31,27 @@
         <form method="POST" action="{% url 'search' %}">
                 {% csrf_token %}
    
-      <div class="card" style="width: 18rem;">
+          <div class="searchresults" id="searchresults">
+
+                <div class="card text-center">
+                    <div class="card-header">
+                      User Details
+                    </div>
+                    <div class="card-body" style="display: inline-block;">
+                      <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
+                      <p class="card-text">Email: {{user.username}}.</p>
+                      <button type="submit" class="btn btn-primary">Add Friend</button>
+                      <input type="hidden" name="UserID" value="{{user.id}}">
+                    </div>
+                    <div class="card-footer text-muted">
+                      Member Since {{user.date_joined}}
+                    </div>
+                  </div>
+                </div>
+                  <br> 
+                  <!-- <div class="col-6 col-md-3 col-lg-2">
+
+      <div class="card" style="width: 20rem; text-align:center;display:inline-block;" >
             <div class="card-body">
                                
               <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
@@ -36,7 +60,10 @@
               <input type="hidden" name="UserID" value="{{user.id}}">
           
             </div>
-          </div>
+          </div> 
+          </div> -->
+          
+
         </form>
           {%endfor%}
 

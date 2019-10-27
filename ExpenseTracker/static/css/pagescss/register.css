@@ -46,15 +46,15 @@ and (orientation : portrait) {
 /* 1366 by 768 Most Used Screen*/
 @media only screen
 and (min-width : 1301px) and (max-width:1380px) {  
-    .logincard {
+    .registercard {
         width: 600px; 
         margin-left:350px;
         margin-top:160px;
     }
-    .loginbutton{
+    .registerbutton{
         margin-left:230px;
     }
-    .registertag{
+    .logintag{
         margin-left:210px;
     }
 
@@ -85,16 +85,16 @@ and (min-width : 1150px) and (max-width:1300px) {
 @media only screen
 and (min-width : 1535px) and (max-width:1598px) {
 
-    .logincard {
+    .registercard {
         width: 700px; 
         margin-left:420px;
         margin-top:160px;
     }
-    .loginbutton{
+    .registerbutton{
         margin-left:300px;
     }
-    .registertag{
-        margin-left:280px;
+    .logintag{
+        margin-left:300px;
     }
 
 

@@ -46,18 +46,15 @@ and (orientation : portrait) {
 /* 1366 by 768 Most Used Screen*/
 @media only screen
 and (min-width : 1301px) and (max-width:1380px) {  
-    .logincard {
-        width: 600px; 
-        margin-left:350px;
-        margin-top:160px;
+    h1{
+        margin-left: 550px;
     }
-    .loginbutton{
-        margin-left:230px;
-    }
-    .registertag{
-        margin-left:210px;
-    }
-
+  
+  .searchresults{
+      margin-left:350px;
+      width: 550px;
+     
+  }
 }
 /* 1920 by 1080 2nd Most Used Screen*/
 @media only screen
@@ -85,18 +82,7 @@ and (min-width : 1150px) and (max-width:1300px) {
 @media only screen
 and (min-width : 1535px) and (max-width:1598px) {
 
-    .logincard {
-        width: 700px; 
-        margin-left:420px;
-        margin-top:160px;
-    }
-    .loginbutton{
-        margin-left:300px;
-    }
-    .registertag{
-        margin-left:280px;
-    }
-
+ 
 
 
 

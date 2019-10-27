@@ -4,62 +4,92 @@
 
 <link rel="stylesheet" href="{% static 'css/pagescss/home.css'%}" />
 
-<div class="form-group">
-    <label for="exampleFormControlSelect1">Filter Graph</label>
-    <select class="form-control" id="filteroptions">
-      <option value="All">All</option>
-      <option value="Today">Today</option>
-      <option value="ThisWeek">This Week</option>
-      <option value="LastWeek">Last Week</option>
-      <option value="ThisMonth">This Month</option>
-      <option value="LastMonth">Last Month</option>
-    </select>
+<div class="filtercard" >
+    <div class="card border-primary mb-3" >
+  <div class="card-body">
+  <h3>Filters</h3>
+    <!-- <div class="form-group">
+      <label for="exampleFormControlSelect1">Filter Graph</label>
+      <select class="form-control" id="filteroptions">
+        <option value="All">All</option>
+        <option value="Today">Today</option>
+        <option value="ThisWeek">This Week</option>
+        <option value="LastWeek">Last Week</option>
+        <option value="ThisMonth">This Month</option>
+        <option value="LastMonth">Last Month</option>
+      </select> -->
+      <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="datashow">
+          <label class="custom-control-label" for="datashow">Show All Data</label>
+        </div>
 
-    <p>Date From: <input type="text" id="datepicker"></p>
-    <p>Date To: <input type="text" id="datepicker1"></p>
-<div class="card" style="width:400px;">
-    {% for message in messages %}
-    {% if "Error" in message %}
-    <div class="alert alert-danger">
-        <a class="close" href="#" data-dismiss="alert">×</a>
+      <p>Date From: <input type="text" id="datepicker"></p>
+      <p>Date To: <input type="text" id="datepicker1"></p>
 
-        {{ message }}
-
-    </div>
-    {% else %}
-    <div class="alert alert-success">
-        <a class="close" href="#" data-dismiss="alert">×</a>
-
-        {{ message }}
-
-    </div>
-
-    {% endif %}
-    {% endfor %}
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-                Add Expense
-              </button>
-              <button type="button" class="btn btn-success" data-toggle="modal" data-target="#catagorymodel">
-                  Add Catagory
-                </button>
-              
-              <div class="list-group">
-                {% for expense in MyExpense%}
-                    <a href="#" class="list-group-item list-group-item-action ">
-                     £{{expense.Amount}} spent on {{expense.Catagory}} on {{expense.Date_Time}}
-                    </a>
-                    {%endfor%}
-                  
-                  </div>
+      </div>
+  </div>
 </div>
 
+    <div class="expensecard" >
+        <div class="card border-primary mb-3" >
+      <div class="card-body">
+        {% for message in messages %}
+        {% if "Error" in message %}
+        <div class="alert alert-danger">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+    
+            {{ message }}
+    
+        </div>
+        {% else %}
+        <div class="alert alert-success">
+            <a class="close" href="#" data-dismiss="alert">×</a>
+    
+            {{ message }}
+    
+        </div>
+    
+        {% endif %}
+        {% endfor %}
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
+                    Add Expense
+                  </button>
+                  <button type="button" class="btn btn-success" data-toggle="modal" data-target="#catagorymodel">
+                      Add Catagory
+                    </button>
+                  
+                  <div class="list-group">
+                    {% for expense in MyExpense%}
+                        <a href="#" class="list-group-item list-group-item-action ">
+                         £{{expense.Amount}} spent on {{expense.Catagory}} on {{expense.Date_Time}}
+                        </a>
+                        {%endfor%}
+                      
+      
+      </div>
+    </div>
+    </div>
+
+                  </div>
+
+
 <!--  style="position: absolute; margin-left:600px; width:500px;" -->
-<div id="container" class="container" ></div>
+<div class="piecard" >
+    <div class="card border-primary mb-3" >
+  <div class="card-body">
+    <div id="container" class="container"></div>
+    </div>
+  </div>
+</div>
 
-<!-- style="position: absolute; margin-left:600px;width:700px;" -->
-<div id="container1" class="container1"  ></div>
 
-
+<div class="linecard" >
+    <div class="card border-primary mb-3" >
+  <div class="card-body">
+    <div id="container1" class="container1" ></div>
+    </div>
+  </div>
+</div>
 
       
       <!-- Modal -->
@@ -147,7 +177,49 @@
           </div>
 
 
-          
+          <script>
+              $(document).ready(function() {
+
+                var timescheck=localStorage.getItem('time');
+                if (timescheck=='All'){
+                  $('#datashow').prop('checked', true);
+                  $( "#datepicker" ).datepicker( "option", "disabled", true );
+                  $( "#datepicker1" ).datepicker( "option", "disabled", true );
+                }
+                else{
+                  $('#datashow').prop('checked', false);
+                  $( "#datepicker" ).datepicker( "option", "disabled", false );
+                  $( "#datepicker1" ).datepicker( "option", "disabled", false );
+                }
+
+               
+                $('#datashow').change(function () {
+                  
+               if ($('#datashow').is(":checked")) {
+               
+                $( "#datepicker" ).datepicker( "option", "disabled", true );
+                $( "#datepicker1" ).datepicker( "option", "disabled", true );
+
+                localStorage.setItem('time', "All");
+                piechart();
+                linechart();
+                 
+              }
+              else{
+
+                $( "#datepicker" ).datepicker( "option", "disabled", false );
+                $( "#datepicker1" ).datepicker( "option", "disabled", false );
+
+                localStorage.setItem('time', "Custom");
+                piechart();
+                linechart();
+              }
+
+               });
+
+            });
+          </script>
+         
 
 <script>
     $( function() {
@@ -189,19 +261,7 @@
                 piechart();
                 linechart();
             });
-
-              $('#filteroptions').on('change', function() {
-                var time=this.value;
-               
-                localStorage.setItem('time', time);
-
-                piechart();
-                linechart();
-              });
-
-              
-
-            
+    
               function piechart(){
                 var time=localStorage.getItem('time');
                 var datepick=localStorage.getItem('datePick');
