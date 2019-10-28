@@ -112,8 +112,8 @@ def search(request):
             SentTo=request.POST['UserID']
             
             checkrequest = Request.objects.all().filter(Q(SentBy_id=SentBy)&Q(SentTo_id=SentTo))
-
-            if not checkrequest:
+            checkfriend = Friend.objects.all().filter(Q(UserID_id=SentBy)&Q(FriendID_id=SentTo))
+            if (not checkrequest) and (not checkfriend):
                 print('No Results')
                 try:
                     FriendRequest = Request.objects.create(SentBy_id=SentBy, SentTo_id=SentTo)

@@ -87,6 +87,19 @@ and (min-width : 1150px) and (max-width:1300px) {
 @media only screen
 and (min-width : 1535px) and (max-width:1598px) {
 
+  .friendscard{
+    position: absolute;
+    width: 750px;
+    margin-top:20px;
+    margin-left: 20px;
+}
+.requestscard{
+    position: absolute;
+    margin-top:20px;
+    margin-left: 800px;
+    width:700px;
+}
+
  
 
 

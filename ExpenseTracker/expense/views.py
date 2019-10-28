@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate
 from django.db import IntegrityError
 from django.shortcuts import render_to_response
 from django.db.models import Q
-from django.db.models import Sum
+from django.db.models import Sum, Count
 
 
 # Create your views here.
@@ -73,3 +73,34 @@ def index(request):
                
     else:
         return redirect("login")
+
+
+def insights(request):
+    if request.user.is_authenticated:
+
+        # totalamount = Expenses.objects.raw('SELECT "id", SUM("Amount") as totalexpense from "expense_expenses" ')
+        totalusers = User.objects.count()
+
+        # for data in totalamount:
+        #     print (data.totalexpense)
+
+        print(totalusers)
+
+        # for data in totalamount:
+        #     print(data.totalExpense)
+        # print(totalamount.totalExpense)
+
+
+    
+
+
+        context={
+                "Amounts":totalamount,
+                "Users":totalusers,
+        }
+
+        return render(request,'expense/insight.html',context)
+
+
+    else:
+        return redirect('login')

@@ -184,15 +184,17 @@
               $(document).ready(function() {
 
                 var timescheck=localStorage.getItem('time');
+                //alert(timescheck);
                 if (timescheck=='All'){
                   $('#datashow').prop('checked', true);
                   $( "#datepicker" ).datepicker( "option", "disabled", true );
                   $( "#datepicker1" ).datepicker( "option", "disabled", true );
+                  alert("disabled");
                 }
                 else{
                   $('#datashow').prop('checked', false);
                   $( "#datepicker" ).datepicker( "option", "disabled", false );
-                  $( "#datepicker1" ).datepicker( "option", "disabled", false );
+                  $( "#datepicker1" ).datepicker( "option", "disabled", false );  
                 }
 
                

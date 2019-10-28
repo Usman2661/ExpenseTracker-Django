@@ -83,7 +83,6 @@ def line_chart(request):
     categories = list()
     totalExpense=list()
 
-
     for mydata in dataset:
         categories.append(mydata['Date_Time__date'])
         totalExpense.append(mydata['totalExpense'])    
@@ -195,6 +194,59 @@ def line_chart_leaderboard(request):
             'name': 'Total Amount',
             'data': totalExpense
         }]
+    }
+
+    return JsonResponse(chart)
+
+
+def line_chart_insight(request):
+
+    UserID=request.user.id
+    dataset = Expenses.objects.values('Date_Time__date').annotate(totalExpense=Sum('Amount')).order_by('Date_Time__date')
+
+    # names = list()
+    # totalExpense=list()
+
+    # for mydata in dataset:
+    #     if mydata.id==request.user.id:
+    #         names.append(mydata.first_name + ' '+ mydata.last_name+ " (You)" )
+    #         totalExpense.append({"y":mydata.TotalExpense, "color":"#53F48D"})    
+    #     else:
+    #         names.append(mydata.first_name + ' '+ mydata.last_name )
+    #         totalExpense.append({"y":mydata.TotalExpense , "color":"#8E44AD"} )    
+
+
+    categories = list()
+    totalExpense=list()
+
+    for mydata in dataset:
+        categories.append(mydata['Date_Time__date'])
+        totalExpense.append({"y":mydata['totalExpense'] , "color":"#8E44AD"}) 
+
+    chart = {
+        'chart': {'type': 'column'},
+        'title': {'text': 'Datewise Spendings'},
+        'xAxis': {'categories': categories},
+        'series': [{
+            'name': 'Total Amount',
+            'data': totalExpense
+        }]
+    }
+
+    return JsonResponse(chart)
+
+def pie_chart_insight(request):
+ 
+    UserID=request.user.id
+
+    dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).order_by('-totalExpense')
+
+    chart = {
+        'chart': {'type': 'pie'},
+        'title': {'text': 'Catagory Distribution'},
+        'series': [{
+        'name': 'Total Amount',
+        'data': list(map(lambda row: {'name': row['Catagory'], 'y': row['totalExpense']}, dataset))        }]
     }
 
     return JsonResponse(chart)

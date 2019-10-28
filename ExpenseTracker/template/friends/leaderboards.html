@@ -31,28 +31,4 @@
   </table>
 
 
-  <div id="container" data-url="{% url 'pie_chart_leaderboard' %}"></div>
-
-  <script>
-      $.ajax({
-        url: $("#container").attr("data-url"),
-        dataType: 'json',
-        success: function (data) {
-          Highcharts.chart("container", data);
-        }
-      });
-    </script>
-
-    <div id="container1" data-url="{% url 'line_chart_leaderboard' %}"></div>
-
-    <script>
-        $.ajax({
-          url: $("#container1").attr("data-url"),
-          dataType: 'json',
-          success: function (data) {
-            Highcharts.chart("container1", data);
-          }
-        });
-      </script>
-
 {%endblock%}
