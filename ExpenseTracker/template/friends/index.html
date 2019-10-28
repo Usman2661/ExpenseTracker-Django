@@ -2,7 +2,7 @@
 {% load static %}
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/pagescss/friends.css'%}" />
-<h1> Welcome to the friends page</h1>
+
 {% for message in messages %}
 {% if "Error" in message %}
 <div class="alert alert-danger">
@@ -26,43 +26,95 @@
 <form action="{% url 'search' %}">
    
 
-        <input class="form-control mr-sm-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
+        <!-- <input class="form-control mr-sm-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button> -->
+        <div class="container" style="margin-top: 10px;">
+            <div class="input-group">
+              <input type="text" name="search" id="search" class="form-control" placeholder="Search for...">
+                  <span class="input-group-btn">
+                    <button class="btn btn-search" type="submite"><i class="fa fa-search fa-fw"></i> Search</button>
+                  </span>
+            </div>
+            </div>
 
     </form>
 
-    
-    <ul class="list-group">
-        <h3>Friend Requests</h3>
-          {% for request in requests%}
-          <form method="POST" action="{% url 'friends' %}">
-                  {% csrf_token %}
-     
-        <div class="card" style="width: 18rem;">
-              <div class="card-body">
-                                 
-                <h5 class="card-title">{{request.SentBy.first_name}} {{request.SentBy.username}}</h5>
-                <p class="card-text">{{request.DateTimeSent}}</p>
-                <button type="submit" class="btn btn-primary">Accept</button>
-                <input type="hidden" name="UserID" value="{{request.SentBy_id}}">
+
+    <div class="requestscard" >
+        <div class="card border-primary mb-3" >
+
             
-              </div>
-            </div>
-          </form>
-            {%endfor%}
+                <h2>Friend Requests</h2>
+                <div class="row">
+                  {% for request in requests%}
+                  <form method="POST" action="{% url 'friends' %}">
+                          {% csrf_token %}
+                          <div class="col-sm-6">
+                <div class="card"  style="width: 18rem; height:14rem; margin-left:10px;" >
+                    <img src="{% static 'img/avatar.png' %}" class="rounded" alt="Cinque Terre" style="width: 100px; margin-left:80px;">
 
-
-            <ul class="list-group">
-              <h3>My Friends</h3>
-                {% for friend in friends%}    
-              <div class="card" style="width: 18rem;">
-                    <div class="card-body">
+                      <div class="card-body" >
                                        
-                      <h5 class="card-title">{{friend.FriendID.first_name}}  {{friend.FriendID.username}} </h5>
-                      <p class="card-text">{{friend.FriendSince}}</p>
+                        <h5 class="card-title">{{request.SentBy.first_name}} {{request.SentBy.username}}</h5>
+                        <p class="card-text">{{request.DateTimeSent}}</p>
+                        <button type="submit" class="btn btn-primary">Accept</button>
+                        <input type="hidden" name="UserID" value="{{request.SentBy_id}}">
+                    
+                      </div>
                     </div>
                   </div>
-             
-                  {%endfor%}
+                  </form>
+               
+                    {%endfor%}
+</div>
+          </div>
+          </div>
+
+          
+    <div class="friendscard" >
+        <div class="card border-primary mb-3" >
+
+
+        
+                <h2>My Friends</h2>
+                <div class="row">
+                  {% for friend in friends%}   
+                
+                      <div class="col-sm-6">
+                          <div class="card" style="width: 18rem; height:14rem; margin-left:10px;">
+                          <img src="{% static 'img/avatar.png' %}" class="rounded" alt="Cinque Terre" style="width: 100px; margin-left:80px;">
+                          <div class="card-body">
+                              <h5 class="card-title">{{friend.FriendID.first_name}}  {{friend.FriendID.username}} </h5>
+                              <p class="card-text">{{friend.FriendSince}}</p>                   
+                                 
+                          </div>
+                        </div>
+                        <br>
+                      </div>
+                     
+                
+                
+                  
+                <!-- <div class="card" >
+                      <div class="card-body">
+                           <img src="{% static 'img/avatar.png' %}" class="rounded" alt="Cinque Terre" style="width: 100px;"> 
+                                         
+                        <h5 class="card-title">{{friend.FriendID.first_name}}  {{friend.FriendID.username}} </h5>
+                        <p class="card-text">{{friend.FriendSince}}</p>
+                      </div>
+                    </div> -->
+               
+                    {%endfor%}
+                  </div>
+
+        </div>
+        </div>
+                  
+         
+    
+  
+
+
+           
           
 {% endblock %}

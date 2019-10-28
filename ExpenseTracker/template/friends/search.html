@@ -27,17 +27,21 @@
     {% endif %}
     {% endfor %}     
     
+    
+    <div class="row">
         {% for user in searchresults%}
         <form method="POST" action="{% url 'search' %}">
                 {% csrf_token %}
+                <div class="col-sm-6">
    
-          <div class="searchresults" id="searchresults">
+          <div class="searchresults" id="searchresults" style="width: 18rem; height:14rem; margin-left:10px;">
 
                 <div class="card text-center">
                     <div class="card-header">
                       User Details
                     </div>
-                    <div class="card-body" style="display: inline-block;">
+                    <div class="card-body" >
+                        <img src="{% static 'img/avatar.png' %}" class="rounded" alt="Cinque Terre" style="width: 100px; ">
                       <h5 class="card-title">{{user.first_name}} {{user.last_name}}</h5>
                       <p class="card-text">Email: {{user.username}}.</p>
                       <button type="submit" class="btn btn-primary">Add Friend</button>
@@ -49,6 +53,12 @@
                   </div>
                 </div>
                   <br> 
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>
                   <!-- <div class="col-6 col-md-3 col-lg-2">
 
       <div class="card" style="width: 20rem; text-align:center;display:inline-block;" >
@@ -63,8 +73,9 @@
           </div> 
           </div> -->
           
-
+        </div>
         </form>
           {%endfor%}
+          </div>
 
 {% endblock %}

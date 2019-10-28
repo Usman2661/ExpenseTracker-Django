@@ -43,6 +43,15 @@ def index(request):
 
             myrequests = Request.objects.select_related().filter(Q(SentTo=MyUserID)&Q(Status=False))
 
+            # totalfriends = Friend.objects.annotate(myrequest=Count('id')).filter(UserID_id=MyUserID).exclude(FriendID_id=MyUserID)
+            # for data in totalfriends:
+            #     print (data.myrequest)
+            # # print(totalfriends)
+            # totalrequests = Request.objects.annotate(myrequest=Count('id')).filter(Q(SentTo=MyUserID)&Q(Status=False))
+            # for data in totalrequests:
+            #     print (data.myrequest)
+            # print(totalrequests)
+
             print(myfriends.query)
             #.values_list('SentBy__username', 'SentBy__first_name','DateTimeSent')
             #username=myrequests.SentBy__username

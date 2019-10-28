@@ -57,15 +57,18 @@
                   <button type="button" class="btn btn-success" data-toggle="modal" data-target="#catagorymodel">
                       Add Catagory
                     </button>
+                    
+                    <br>
                   
                   <div class="list-group">
                     {% for expense in MyExpense%}
                         <a href="#" class="list-group-item list-group-item-action ">
                          £{{expense.Amount}} spent on {{expense.Catagory}} on {{expense.Date_Time}}
                         </a>
+                        <br>
                         {%endfor%}
                       
-      
+
       </div>
     </div>
     </div>
