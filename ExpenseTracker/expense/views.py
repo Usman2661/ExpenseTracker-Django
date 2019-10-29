@@ -78,7 +78,7 @@ def index(request):
 def insights(request):
     if request.user.is_authenticated:
 
-        # totalamount = Expenses.objects.raw('SELECT "id", SUM("Amount") as totalexpense from "expense_expenses" ')
+        totalamount = Expenses.objects.raw('SELECT "id", SUM("Amount") as totalexpense from "expense_expenses" ')
         totalusers = User.objects.count()
 
         # for data in totalamount:

@@ -133,6 +133,12 @@
                               <label for="exampleFormControlTextarea1">Notes</label>
                               <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
                             </div>
+
+                            <a class="c-btn c-datepicker-btn">
+                                Date Time: <input type="text" name="datetime" value="Date-Time"><br>
+                                  </a>
+                                
+                                  <pre id="output"></pre>
                    
 
             </div>
@@ -189,7 +195,7 @@
                   $('#datashow').prop('checked', true);
                   $( "#datepicker" ).datepicker( "option", "disabled", true );
                   $( "#datepicker1" ).datepicker( "option", "disabled", true );
-                  alert("disabled");
+                  
                 }
                 else{
                   $('#datashow').prop('checked', false);
@@ -302,6 +308,19 @@
                         }
                       </script>
 
+                      <script>
+
+                          var picker = new MaterialDatetimePicker({})
+                            .on('submit', function(d) {
+                              output.innerText = d;
+                            });
+                      
+                          var el = document.querySelector('.c-datepicker-btn');
+                          el.addEventListener('click', function() {
+                            picker.open();
+                          }, false);
+                      
+                      </script>
 {%endblock%}
 <script type="text/javascript">
   $(function () {
