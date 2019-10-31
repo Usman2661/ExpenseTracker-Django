@@ -15,41 +15,55 @@ from django.db.models import Sum, Count
 def index(request):
 
     if request.user.is_authenticated:
+        # mydate=request.GET.get('datetimepicker')
+       
+        
+        datetime=request.GET.get('datetimepicker')
 
-        if request.method=='POST':
-            if "newcatagory" not in request.POST:
-                amount=request.POST['amount']
-                catagories=request.POST['catagory']
-                content=request.POST['content']
-                notes=request.POST['notes']
-                UserID=request.user.id
+        amount=request.GET.get('amount')
+        catagory=request.GET.get('catagory')
+        contents=request.GET.get('contents')
+        notes=request.GET.get('notes')
 
-                try:
+        # def foo():
+        #     print(x)
 
-                    expense = Expenses.objects.create(Amount=amount, Catagory=catagories, Contents=content,Notes=notes,User_ID_id=UserID)
-            # status=user.save()
-                except IntegrityError:
-                    messages.error(request,'Error: There has been an error while adding expense')
-                    return redirect('home')
-                else:
-                    messages.success(request,'Expense Added Succesfully')
-                    return redirect('home')
-            else:
+        if datetime is not None:
+            datetime=request.GET.get('datetimepicker')
+            amount=request.GET.get('amount')
+            catagory=request.GET.get('catagory')
+            contents=request.GET.get('contents')
+            notes=request.GET.get('notes')
+            UserID=request.user.id
+
+       
+
+            expense = Expenses.objects.create(Amount=amount, Catagory=catagory, Contents=contents,Notes=notes,User_ID_id=UserID,Date_Time=datetime)
+            expense.save()
+
+            return redirect('home')
+            # try:
+            #     expense = Expenses.objects.create(Amount=amount, Catagory=catagory, Contents=contents,Notes=notes,User_ID_id=UserID)
+            # except IntegrityError:
+            #     messages.error(request,'Error: There has been an error while adding expense')
+            #     return redirect('home')
+            # else:
+            #     messages.success(request,'Expense Added Succesfully')
+            #     return redirect('home')
+
+        elif request.method=='POST':
+            if "newcatagory" in request.POST:
                 newcatagory = request.POST['newcatagory']
                 UserID=request.user.id
 
                 try:
                     catagory = Catagory.objects.create(Name=newcatagory,User_ID=UserID)
-            # status=user.save()
                 except IntegrityError:
                     messages.error(request,'Error: There has been an error while adding catagory')
                     return redirect('home')
                 else:
                     messages.success(request,'Catagory Added Succesfully')
                     return redirect('home')
-
-
-
         else:
             UserID=request.user.id
             checkrequest = Friend.objects.all().filter(Q(UserID_id=UserID)&Q(FriendID_id=UserID))

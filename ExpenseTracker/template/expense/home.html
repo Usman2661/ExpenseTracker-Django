@@ -106,9 +106,9 @@
               </button>
             </div>
             <div class="modal-body">
-                    <form method="POST" action="{% url 'home' %}">
+                    <!-- <form method="POST" action="{% url 'home' %}"> -->
 
-                        {% csrf_token %}
+                        <!-- {% csrf_token %} -->
                             <div class="form-group">
                               <label for="amount">Amount</label>
                               <input type="number" class="form-control" id="amount" name="amount" placeholder="10">
@@ -134,20 +134,21 @@
                               <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
                             </div>
 
-                            <a class="c-btn c-datepicker-btn">
-                                Date Time: <input type="text" name="datetime" value="Date-Time"><br>
-                                  </a>
-                                
-                                  <pre id="output"></pre>
+                            {{DateForm.my_date_field}}
+                            <input id="datetimepicker" />
+
+                          
+
+                          
                    
 
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save Expense</button>
+              <button type="submit" name="savexpense" id="savexpense" class="btn btn-primary">Save Expense</button>
             </div>
             
-        </form>
+        <!-- </form> -->
           </div>
         </div>
       </div>
@@ -190,12 +191,11 @@
               $(document).ready(function() {
 
                 var timescheck=localStorage.getItem('time');
-                //alert(timescheck);
                 if (timescheck=='All'){
                   $('#datashow').prop('checked', true);
                   $( "#datepicker" ).datepicker( "option", "disabled", true );
                   $( "#datepicker1" ).datepicker( "option", "disabled", true );
-                  
+
                 }
                 else{
                   $('#datashow').prop('checked', false);
@@ -308,22 +308,47 @@
                         }
                       </script>
 
-                      <script>
+                   
+                          <script>
+                              $('#datetimepicker').datetimepicker({
+                                 footer: true,
+                                  modal: false,
+                                  format: 'yyyy-mm-dd HH:MM' ,
+                          
+                                });
+                          </script>
 
-                          var picker = new MaterialDatetimePicker({})
-                            .on('submit', function(d) {
-                              output.innerText = d;
-                            });
-                      
-                          var el = document.querySelector('.c-datepicker-btn');
-                          el.addEventListener('click', function() {
-                            picker.open();
-                          }, false);
-                      
-                      </script>
+
+                          <script>
+                              $( "#savexpense" ).click(function() {
+
+
+                                var amount = $('#amount').val();
+                                var catagory = $('#catagory').val();
+                                var contents = $('#content').val();
+                                var notes = $('#notes').val();
+                                var datetime = $('#datetimepicker').val();
+                                
+
+                                $.ajax({
+                                  url: 'http://localhost:8000/home'+'?datetimepicker='+datetime+'&amount='+amount+'&catagory='+catagory+'&contents='+contents+'&notes='+notes,
+                                  dataType: 'json',
+                                  success: function (data) {
+                                 
+
+                                    
+                                  }
+
+                                  
+                                });
+                         
+                                location.reload();
+                                
+                              });
+
+
+                              
+
+                          </script>
+                     
 {%endblock%}
-<script type="text/javascript">
-  $(function () {
-      $('#datetimepicker1').datetimepicker();
-  });
-</script>
