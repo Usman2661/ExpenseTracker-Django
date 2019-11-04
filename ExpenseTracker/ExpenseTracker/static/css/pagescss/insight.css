@@ -93,13 +93,13 @@ and (min-width : 1535px) and (max-width:1598px) {
         position: relative;
         margin-top:-20px;
         margin-left: 10px;
-        width: 650px;
+        width: 745px;
     }
     .linecard{
         position: relative;
-        width: 650px;
+        width: 745px;
         margin-top:-458px;
-        margin-left: 680px;
+        margin-left: 760px;
     }
  
 

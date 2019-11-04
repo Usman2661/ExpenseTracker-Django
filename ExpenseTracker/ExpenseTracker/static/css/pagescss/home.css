@@ -63,7 +63,7 @@ and (min-width : 1301px) and (max-width:1380px) {
         position: absolute;
         width: 500px;
         margin-left:5px;
-        margin-top:230px;
+        margin-top:270px;
     }
     .filtercard{
         position: absolute;
@@ -116,7 +116,7 @@ and (min-width : 1535px) and (max-width:1598px) {
         position: absolute;
         width: 570px;
         margin-left:5px;
-        margin-top:225px;
+        margin-top:270px;
     }
     .filtercard{
         position: absolute;
