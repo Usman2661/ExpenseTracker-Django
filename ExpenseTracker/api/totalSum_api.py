@@ -12,7 +12,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expenses
-        fields = ['User_ID_id','Amount', 'Catagory', 'Date_Time','totalExpense']
+        fields = ['User_ID_id', 'Catagory', 'Date_Time','totalExpense']
 
 class ExpenseViewSet(viewsets.ModelViewSet):
 
@@ -22,11 +22,9 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        id = self.request.query_params.get('UserID')
-        if id is None:
-            #queryset = Expenses.objects.all().aggregate(Sum('Amount'))
-            queryset= Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount'))
+        type = self.request.query_params.get('type')
+        if type=='pie':
+            queryset= Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).order_by('-totalExpense')
         else:
-            queryset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).filter(User_ID_id=id)
-            #queryset = Expenses.objects.raw('SELECT *,SUM("expense_expenses"."Amount") as totalExpense, "expense_expenses"."Catagory" From "expense_expenses" WHERE "expense_expenses"."User_ID_id"=13 GROUP BY "expense_expenses"."Catagory" ,"expense_expenses"."id";')
+            queryset = Expenses.objects.values('Date_Time__date').annotate(totalExpense=Sum('Amount')).order_by('Date_Time__date')
         return queryset

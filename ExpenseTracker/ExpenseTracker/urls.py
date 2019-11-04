@@ -8,7 +8,7 @@ from api.totalSum_api import ExpenseViewSet
 
 router = routers.DefaultRouter()
 # router.register(r'expense', ExpenseViewSet)
-router.register(r'expense', ExpenseViewSet,basename='Expense')
+router.register(r'catagoryleaderboards', ExpenseViewSet,basename='CatagoryLeaderBoards')
 
 
 urlpatterns = [

@@ -239,7 +239,11 @@ def pie_chart_insight(request):
  
     UserID=request.user.id
 
-    dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).order_by('-totalExpense')
+    response = requests.get('http://localhost:8000/api/catagoryleaderboards/?type=pie')
+    dataset = response.json()
+    
+
+   # dataset = Expenses.objects.values('Catagory').annotate(totalExpense=Sum('Amount')).order_by('-totalExpense')
 
     chart = {
         'chart': {'type': 'pie'},
