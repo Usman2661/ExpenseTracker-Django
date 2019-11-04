@@ -47,19 +47,27 @@ and (orientation : portrait) {
 @media only screen
 and (min-width : 1301px) and (max-width:1380px) {  
 
-    .piecard{
-      
+
+    .tablecard{
         position: relative;
-        margin-top:-20px;
-        margin-left: 10px;
+        margin-top:10px;
+        margin-left:10px;
+        width: 1330px;
+    }
+    .piecard{
+        position: relative;
+        margin-left:10px;
         width: 650px;
     }
     .linecard{
         position: relative;
-        width: 650px;
         margin-top:-458px;
-        margin-left: 680px;
+        width: 650px;
+        margin-left:690px;
+     
     }
+  
+
   
 }
 /* 1920 by 1080 2nd Most Used Screen*/
@@ -88,20 +96,27 @@ and (min-width : 1150px) and (max-width:1300px) {
 @media only screen
 and (min-width : 1535px) and (max-width:1598px) {
 
-    .piecard{
-      
+
+    .tablecard{
         position: relative;
-        margin-top:-20px;
-        margin-left: 10px;
-        width: 650px;
+        margin-top:10px;
+        margin-left:10px;
+        width: 1500px;
+    }
+    .piecard{
+        position: relative;
+        margin-left:10px;
+        width: 730px;
     }
     .linecard{
         position: relative;
-        width: 650px;
         margin-top:-458px;
-        margin-left: 680px;
+        width: 730px;
+        margin-left:780px;
+     
     }
- 
+  
+
 
 
 
@@ -120,12 +135,3 @@ only screen and (min-device-pixel-ratio : 1.5) {
 }
 
 
-
-
-.my-card
-{
-    position:absolute;
-    left:40%;
-    top:-20px;
-    border-radius:50%;
-}

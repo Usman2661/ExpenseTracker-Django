@@ -8,6 +8,8 @@ from django.db import IntegrityError
 from django.shortcuts import render_to_response
 from django.db.models import Q
 from django.db.models import Sum, Count
+from django.db import connection
+
 
 
 # Create your views here.
@@ -66,18 +68,18 @@ def index(request):
                     return redirect('home')
         else:
             UserID=request.user.id
-            checkrequest = Friend.objects.all().filter(Q(UserID_id=UserID)&Q(FriendID_id=UserID))
+            # checkrequest = Friend.objects.all().filter(Q(UserID_id=UserID)&Q(FriendID_id=UserID))
 
-            if not checkrequest:
-                try:
-                    CreateFriend = Friend.objects.create(UserID_id=UserID, FriendID_id=UserID)
-                except IntegrityError:
-                    return redirect('home')
-                else:
-                    return redirect('home')
+            # if not checkrequest:
+            #     try:
+            #         CreateFriend = Friend.objects.create(UserID_id=UserID, FriendID_id=UserID)
+            #     except IntegrityError:
+            #         return redirect('home')
+            #     else:
+            #         return redirect('home')
             
             MyCatagories = Catagory.objects.filter(Q(User_ID=UserID)|Q(User_ID=0))
-            MyExpense = Expenses.objects.all().filter(User_ID_id=UserID)
+            MyExpense = Expenses.objects.all().filter(User_ID_id=UserID).order_by('-id')
             context={
                 "MyCatagories":MyCatagories,
                 "MyExpense":MyExpense,
@@ -92,25 +94,45 @@ def index(request):
 def insights(request):
     if request.user.is_authenticated:
 
-        totalamount = Expenses.objects.raw('SELECT "id", SUM("Amount") as totalexpense from "expense_expenses" ')
+
+        UserID=request.user.id
+
+        cursor = connection.cursor()
+        cursor1 = connection.cursor()
+        cursor2 = connection.cursor()
+
+        cursor.execute('SELECT SUM("Amount") as totalexpense from "expense_expenses" ')
+        max_value = cursor.fetchone()[0]
+
+        
+        cursor1.execute('SELECT COUNT ( DISTINCT "Name" ) AS "Catagories" FROM "expense_catagory"; ')
+        totalcatagories = cursor1.fetchone()[0]
+
+        cursor2.execute('SELECT SUM ("Amount" ) AS mytotalexpense FROM "expense_expenses" WHERE "User_ID_id"='+str(UserID)+';' )
+        totalspending = cursor2.fetchone()[0]
+
         totalusers = User.objects.count()
+
+
+        print(max_value)
+        print(totalcatagories)
+
+
 
         # for data in totalamount:
         #     print (data.totalexpense)
 
-        print(totalusers)
-
-        # for data in totalamount:
-        #     print(data.totalExpense)
+        # for data in totalcatagories:
+        #      print(data.mycat)
         # print(totalamount.totalExpense)
 
-
-    
-
+        # print(totalcatagories.mycat)
 
         context={
-                "Amounts":totalamount,
+                "Amounts":max_value,
                 "Users":totalusers,
+                "Catagories":totalcatagories,
+                "MySpending":totalspending,
         }
 
         return render(request,'expense/insight.html',context)

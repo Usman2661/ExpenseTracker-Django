@@ -188,28 +188,34 @@
 
 
           <script>
+
+            
+              var timescheck=localStorage.getItem('time');
+         
+              if (timescheck=='All'){
+                $('#datashow').prop('checked', true);
+              //  $( "#datepicker" ).datepicker( "option", "disabled", true );
+              //  $( "#datepicker1" ).datepicker( "option", "disabled", true );
+
+              }
+              else{
+                $('#datashow').prop('checked', false);
+               // $( "#datepicker" ).datepicker( "option", "disabled", false );
+               // $( "#datepicker1" ).datepicker( "option", "disabled", false );  
+              }
+          </script>
+
+
+          <script>
               $(document).ready(function() {
 
-                var timescheck=localStorage.getItem('time');
-                if (timescheck=='All'){
-                  $('#datashow').prop('checked', true);
-                  $( "#datepicker" ).datepicker( "option", "disabled", true );
-                  $( "#datepicker1" ).datepicker( "option", "disabled", true );
-
-                }
-                else{
-                  $('#datashow').prop('checked', false);
-                  $( "#datepicker" ).datepicker( "option", "disabled", false );
-                  $( "#datepicker1" ).datepicker( "option", "disabled", false );  
-                }
-
-               
                 $('#datashow').change(function () {
                   
                if ($('#datashow').is(":checked")) {
-               
-                $( "#datepicker" ).datepicker( "option", "disabled", true );
-                $( "#datepicker1" ).datepicker( "option", "disabled", true );
+          
+             //   $('#datepicker').data("DatePicker").disable();
+              //  $('#datepicker1').data("DatePicker").disable();
+           //   $("#datepicker").prop('disabled', true);
 
                 localStorage.setItem('time', "All");
                 piechart();
@@ -217,11 +223,8 @@
                  
               }
               else{
-
-                $( "#datepicker" ).datepicker( "option", "disabled", false );
-                $( "#datepicker1" ).datepicker( "option", "disabled", false );
-
                 localStorage.setItem('time', "Custom");
+              
                 piechart();
                 linechart();
               }
@@ -234,41 +237,53 @@
 
 <script>
     $( function() {
-      $( "#datepicker" ).datepicker({
+      var datepicker = $( "#datepicker" ).datepicker({
         
-         dateFormat: 'yy-mm-dd' ,
-        onSelect: function(dateText) {
-
+        format: 'yyyy-mm-dd',
+        
+         change: function (e) {
           var datepick=this.value;
 
           localStorage.setItem('datePick',datepick)
           piechart();
           linechart();
       }
+
+        
+      
       });
+
       var datepick=localStorage.getItem('datePick');
-      $('#datepicker').datepicker('setDate', datepick);
+      datepicker.value(datepick)
+
+   //   $('#datepicker').datepicker('setDate', datepick);
 
     } );
 
     $( function() {
-      $( "#datepicker1" ).datepicker({
-         dateFormat: 'yy-mm-dd' ,
-        onSelect: function(dateText) {
+      var datepicker1 =$( "#datepicker1" ).datepicker({
+        format: 'yyyy-mm-dd' ,
 
+         change: function (e) {
           var datepick=this.value;
+
 
           localStorage.setItem('datePick1',datepick)
           piechart();
           linechart();
-      }
+              }
+      
       });
+
       var datepick1=localStorage.getItem('datePick1');
-      $('#datepicker1').datepicker('setDate', datepick1);
+      datepicker1.value(datepick1);
+ 
+     // $('#datepicker1').datepicker('setDate', datepick1);
     } );
     </script>
           <script>
               $( document ).ready(function() {
+                    
                 piechart();
                 linechart();
             });

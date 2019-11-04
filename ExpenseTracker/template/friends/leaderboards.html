@@ -3,33 +3,51 @@
 {% block content%}
 <link rel="stylesheet" href="{% static 'css/pagescss/leaderboards.css'%}" />
 
-<h1>Welcome to leaderboards</h1>
 
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Name</th>
-        <th scope="col">Total Amount Spent</th>
-      </tr>
-    </thead>
-    <tbody>
-        {% for leader in leaderboards%}
-      <tr>
-        <th scope="row">{{forloop.counter}}</th>
-        {% if leader.id == request.user.id %}
-        <td> <b> {{leader.first_name}} {{leader.last_name}} (You)</b> </td>
-        <td><b>£ {{leader.TotalExpense}}</b></td>
-        {% else %}
-        <td>{{leader.first_name}} {{leader.last_name}}  </td>
-        <td>£ {{leader.TotalExpense}}</td>
-        {%  endif %}
-      </tr>
-      {% endfor %}
-    
-    </tbody>
-  </table>
-  <div id="container" data-url="{% url 'pie_chart_leaderboard' %}"></div>	
+<div class="tablecard" >
+ 
+  <div class="card border-primary mb-3" >
+
+    <div class="card-body">
+        <h3>Leaderboards</h3>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Total Amount Spent</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for leader in leaderboards%}
+              <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                {% if leader.id == request.user.id %}
+                <td> <b> {{leader.first_name}} {{leader.last_name}} (You)</b> </td>
+                <td><b>£ {{leader.TotalExpense}}</b></td>
+                {% else %}
+                <td>{{leader.first_name}} {{leader.last_name}}  </td>
+                <td>£ {{leader.TotalExpense}}</td>
+                {%  endif %}
+              </tr>
+              {% endfor %}
+            
+            </tbody>
+          </table>
+  
+</div>
+</div>
+</div>
+
+
+  <div class="piecard" >
+    <div class="card border-primary mb-3" >
+  <div class="card-body">
+    <div id="container" data-url="{% url 'pie_chart_leaderboard' %}"></div>	
+  </div>
+  </div>
+</div>
+
 
   <script>	
       $.ajax({	
@@ -41,7 +59,14 @@
       });	
     </script>	
 
-    <div id="container1" data-url="{% url 'line_chart_leaderboard' %}"></div>	
+
+    <div class="linecard" >
+      <div class="card border-primary mb-3" >
+    <div class="card-body">
+      <div id="container1" data-url="{% url 'line_chart_leaderboard' %}"></div>	      </div>
+    </div>
+  </div>
+   
 
     <script>	
         $.ajax({	
